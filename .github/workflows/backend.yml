@@ -41,6 +41,7 @@ jobs:
           host: ${{ secrets.APP_SSH_HOST }}
           username: ${{ secrets.APP_SSH_USER }}
           key: ${{ secrets.APP_SSH_KEY }}
+          passphrase: ${{ secrets.APP_SSH_PASSPHRASE }}
           script: |
             cd /srv/nestya
             sed -i "s/^BACKEND_TAG=.*/BACKEND_TAG=${{ steps.vars.outputs.TAG }}/" .env
