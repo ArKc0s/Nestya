@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: nestya-backend
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate   # ou update au début si besoin
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect

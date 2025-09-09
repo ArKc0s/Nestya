@@ -1,0 +1,25 @@
+# Maven / Java
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# Flutter
+.flutter-plugins
+.flutter-plugins-dependencies
+.dart_tool/
+.packages
+.pub-cache/
+build/
+ios/Flutter/Flutter.framework
+ios/.symlinks
+ios/Pods/
+ios/Runner/GeneratedPluginRegistrant.*
+android/.gradle/
+android/app/build/
+
+# IDE
+.idea/
+*.iml
+.vscode/
