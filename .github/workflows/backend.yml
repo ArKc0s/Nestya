@@ -45,6 +45,6 @@ jobs:
           script: |
             cd /srv/nestya
             sed -i "s/^BACKEND_TAG=.*/BACKEND_TAG=${{ steps.vars.outputs.TAG }}/" .env
-            docker compose pull backend
-            docker compose up -d backend
-            docker compose ps
+            docker-compose pull backend
+            docker-compose up -d backend
+            docker-compose ps
