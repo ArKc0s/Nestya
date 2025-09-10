@@ -23,3 +23,12 @@ android/app/build/
 .idea/
 *.iml
 .vscode/
+
+# Environment variables
+**/.env
+**/secrets.yml
+**/application-local.yml
+
+# Database
+*.db
+*.sql.backup
