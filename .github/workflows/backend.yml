@@ -43,7 +43,6 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-          maven-version: '3.9.6'
       - run: |
           cd backend
           mvn flyway:migrate -Dflyway.url=${{ secrets.FLYWAY_URL }} -Dflyway.user=${{ secrets.FLYWAY_USER }} -Dflyway.password=${{ secrets.FLYWAY_PASSWORD }}
