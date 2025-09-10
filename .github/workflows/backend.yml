@@ -38,12 +38,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # ÉTAPE DE MIGRATION DE LA BDD
       - name: Run Database Migration
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
+          maven-version: '3.9.6'
       - run: |
           cd backend
           mvn flyway:migrate -Dflyway.url=${{ secrets.FLYWAY_URL }} -Dflyway.user=${{ secrets.FLYWAY_USER }} -Dflyway.password=${{ secrets.FLYWAY_PASSWORD }}
