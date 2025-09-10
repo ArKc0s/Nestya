@@ -1,38 +1,14 @@
-name: Backend CI/CD
+name: Backend Release & Deploy
+
 on:
   push:
-    branches: [main]
-    paths:
-      - "backend/**"
-      - ".github/workflows/backend.yml"
-  pull_request:
-    branches: [main]
-    paths:
-      - "backend/**"
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-      - name: Cache Maven packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-      - name: Run tests & quality checks
-        run: |
-          cd backend
-          mvn -B verify
   analyze:
-    name: analyze
-    needs: test
+    name: Analyze Code with SonarQube
     runs-on: ['self-hosted', 'Linux', 'X64']
     steps:
       - uses: actions/checkout@v4
@@ -57,20 +33,22 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build and analyze
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: |
           cd backend
-          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=nestya-backend -Dsonar.projectName='Nestya'
+          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=nestya-backend
 
-  deploy:
-    if: github.ref == 'refs/heads/main'
+  build-and-deploy:
+    name: Build, Push and Deploy Release
     needs: analyze
     runs-on: ['self-hosted', 'Linux', 'X64']
     steps:
       - uses: actions/checkout@v4
 
       - name: Run Database Migration
+        # On utilise setup-java ici car c'est un nouveau job
         uses: actions/setup-java@v4
         with:
           java-version: '21'
@@ -79,9 +57,9 @@ jobs:
           cd backend
           mvn flyway:migrate -Dflyway.url=${{ secrets.FLYWAY_URL }} -Dflyway.user=${{ secrets.FLYWAY_USER }} -Dflyway.password=${{ secrets.FLYWAY_PASSWORD }}
 
-      - name: Image tag
+      - name: Set Release Version as Tag
         id: vars
-        run: echo "TAG=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+        run: echo "TAG=${{ github.ref_name }}" >> $GITHUB_OUTPUT
 
       - name: Login to registry
         run: echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login ${{ secrets.REGISTRY_URL }} -u ${{ secrets.REGISTRY_USER }} --password-stdin
