@@ -12,3 +12,10 @@ spring:
 
   flyway:
     enabled: false
+
+jwt:
+  secret-key: MjU2Yml0c2VjcmV0a2V5Zm9ydGVzdGluZ3B1cnBvc2Vzb25seSEhISEhISEhISE=
+  access-token:
+    expiration: 900000 # 15 minutes
+  refresh-token:
+    expiration: 604800000 # 7 days
