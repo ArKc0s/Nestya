@@ -5,7 +5,7 @@ import fr.nestya.auth.dto.LoginRequest;
 import fr.nestya.auth.dto.RefreshTokenRequest;
 import fr.nestya.auth.dto.RegisterRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -35,4 +35,11 @@ public class AuthController {
         authService.logout(request.refreshToken());
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/google/grantcode")
+    public ResponseEntity<AuthResponse>  grantCode(@RequestParam("code") String code, @RequestParam("scope") String scope, @RequestParam("authuser") String authUser, @RequestParam("prompt") String prompt) {
+        return ResponseEntity.ok(authService.loginWithGoogle(code));
+    }
+
+
 }
